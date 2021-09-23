@@ -75,9 +75,15 @@ namespace NativeMenuBar.Core
                 menuRootItem.Id = AddMenuRoot(menuRootItem.Name);
                 foreach (var menuItem in menuRootItem.MenuItems)
                 {
-                    var menuItemName = menuItem.ShortcutCombination != MenuItem.CombinationKeys.None
-                        ? $"{menuItem.Name}\t{menuItem.ShortcutCombination}+{menuItem.Shortcut.ToString().ToUpperInvariant()}"
-                        : $"{menuItem.Name}";
+                    var menuItemName = menuItem.Name;
+                    if(menuItem.ShortcutCombination != MenuItem.CombinationKeys.None && !char.IsWhiteSpace(menuItem.Shortcut))
+                    {
+                        menuItemName += $"\t{menuItem.ShortcutCombination}+{menuItem.Shortcut.ToString().ToUpperInvariant()}";
+                    }
+                    else if(!char.IsWhiteSpace(menuItem.Shortcut))
+                    {
+                        menuItemName += $"\t{menuItem.Shortcut.ToString().ToUpperInvariant()}";
+                    }
                     menuItem.Id = AddMenuItem(menuRootItem.Name, menuItemName);
                 }
             }
@@ -92,9 +98,9 @@ namespace NativeMenuBar.Core
             foreach (var menuItem in MenuItems)
             {
                 var keycodes = menuItem.ShortcutKeys;
-                if (keycodes.Any(k => Input.GetKey(k)))
+                if (menuItem.ShortcutCombination == MenuItem.CombinationKeys.None || keycodes.Any(k => Input.GetKey(k)))
                 {
-                    if (Input.GetKeyDown(menuItem.Shortcut.ToString().ToLowerInvariant()))
+                    if (System.Enum.TryParse(menuItem.Shortcut.ToString().ToUpperInvariant(), out KeyCode keyCode) && Input.GetKeyDown(keyCode))
                     {
                         menuItem.Action?.Invoke();
                     }

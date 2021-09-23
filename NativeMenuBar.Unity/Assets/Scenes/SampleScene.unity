@@ -484,7 +484,7 @@ MonoBehaviour:
   - name: Basic
     menuItems:
     - name: Item 1
-      shortcut: 32
+      shortcut: 97
       shortcutCombination: 0
       action:
         m_PersistentCalls:
@@ -502,7 +502,7 @@ MonoBehaviour:
               m_BoolArgument: 0
             m_CallState: 2
     - name: Item 2
-      shortcut: 32
+      shortcut: 98
       shortcutCombination: 0
       action:
         m_PersistentCalls:

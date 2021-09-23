@@ -16,7 +16,7 @@ namespace NativeMenuBar.Core
         }
 
         [SerializeField]
-        private char shortcut = default;
+        private char shortcut = ' ';
         public char Shortcut
         {
             get => shortcut;
