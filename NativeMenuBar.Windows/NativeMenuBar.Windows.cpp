@@ -44,40 +44,39 @@ UINT AddMenuRoot(const char* menu)
     std::string menuStr(menu);
 
     // If menuRoot does not already exist
-    auto result = std::find_if(menuItems.begin(), menuItems.end(), MenuItemNameComparator(menuStr));
+    auto result = std::find_if(menuItems.begin(), menuItems.end(), MenuItemNameAndParentIdComparator(menuStr, 0));
     if(result == std::end(menuItems))
     {
         HMENU hMenuRoot = CreatePopupMenu();
-        AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hMenuRoot, s2ws(menuStr).c_str());
+        InsertMenu(hMenu, -1, MF_STRING | MF_POPUP, (UINT)hMenuRoot, s2ws(menuStr).c_str());
         menuItems.emplace_back(MenuItem(hMenuRoot, menu));
         return (UINT)hMenuRoot;
     }
     return 0;
 }
 
-UINT AddMenuItem(const char* menuRoot, const char* menuItem)
+UINT AddMenuItem(const UINT menuParent, const char* menuItem, bool hasSubItem)
 {
-    std::string menuRootStr(menuRoot);
     std::string menuItemStr(menuItem);
     
-    // If menuRoot already exist
-    auto rootResult = std::find_if(menuItems.begin(), menuItems.end(), MenuItemNameComparator(menuRootStr));
-    if (rootResult != std::end(menuItems))
+    // If menuParent already exist among items
+    auto parentResult = std::find_if(menuItems.begin(), menuItems.end(), MenuItemIdComparator(menuParent));
+    if (parentResult != std::end(menuItems))
     {
-        // If menuItem does not already exist
-        auto itemResult = std::find_if(menuItems.begin(), menuItems.end(), MenuItemNameComparator(menuItemStr));
+        // If menuItem with the same name does not already exist
+        auto itemResult = std::find_if(menuItems.begin(), menuItems.end(), MenuItemNameAndParentIdComparator(menuItemStr, menuParent));
         if (itemResult == std::end(menuItems))
         {
             HMENU hMenuItem = CreatePopupMenu();
-            AppendMenu(rootResult->menuHandle, MF_STRING, (UINT)hMenuItem, s2ws(menuItemStr).c_str());
-            menuItems.emplace_back(MenuItem(hMenuItem, menuItem));
+            AppendMenu(parentResult->GetMenuHandle(), hasSubItem ? MF_POPUP : MF_STRING, (UINT)hMenuItem, s2ws(menuItemStr).c_str());
+            menuItems.emplace_back(MenuItem(hMenuItem, menuItem, parentResult->GetId()));
             return (UINT)hMenuItem;
         }
     }
     return 0;
 }
 
-void SetMenuItemSelected(UINT menuId, bool state)
+void SetMenuItemSelected(const UINT menuId, bool state)
 {
     // If menuItem exist
     auto result = std::find_if(menuItems.begin(), menuItems.end(), MenuItemIdComparator(menuId));

@@ -12,7 +12,10 @@ public class Sample : MonoBehaviour
     private TextMeshProUGUI item1Text = default;
 
     [SerializeField]
-    private TextMeshProUGUI item2Text = default;
+    private TextMeshProUGUI subItem1Text = default;
+
+    [SerializeField]
+    private TextMeshProUGUI subItem2Text = default;
 
     private void Start()
     {
@@ -26,9 +29,14 @@ public class Sample : MonoBehaviour
         item1Text.gameObject.SetActive(true);
     }
 
-    public void OnBasicItem2MenuItemClicked()
+    public void OnBasicSubItem1MenuItemClicked()
     {
-        item2Text.gameObject.SetActive(true);
+        subItem1Text.gameObject.SetActive(true);
+    }
+
+    public void OnBasicSubItem2MenuItemClicked()
+    {
+        subItem2Text.gameObject.SetActive(true);
     }
 
     public void OnToggleToggle1MenuItemClicked()

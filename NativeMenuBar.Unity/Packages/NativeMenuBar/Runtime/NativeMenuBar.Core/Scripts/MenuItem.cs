@@ -5,16 +5,8 @@ using UnityEngine.Events;
 namespace NativeMenuBar.Core
 {
     [Serializable]
-    public class MenuItem
+    public class MenuItem : AbstractMenuItem
     {
-        [SerializeField]
-        private string name = default;
-        public string Name
-        {
-            get => name;
-            set => name = value;
-        }
-
         [SerializeField]
         private char shortcut = ' ';
         public char Shortcut
@@ -56,8 +48,6 @@ namespace NativeMenuBar.Core
             get => action;
             set => action = value;
         }
-
-        public uint Id { get; internal set; }
 
         public bool IsToggled
         {

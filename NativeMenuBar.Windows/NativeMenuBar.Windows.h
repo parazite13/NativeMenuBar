@@ -10,7 +10,7 @@ extern "C"
 {
     DLLExport void StartPlugin();
     DLLExport UINT AddMenuRoot(const char* menu);
-    DLLExport UINT AddMenuItem(const char* menuRoot, const char* menuItem);
+    DLLExport UINT AddMenuItem(const UINT menuParent, const char* menuItem, bool hasSubItem);
     DLLExport bool IsMenuItemSelected(UINT menuId);
     DLLExport void SetMenuItemSelected(UINT menuId, bool state);
     DLLExport bool IsMenuItemEnabled(UINT menuId);

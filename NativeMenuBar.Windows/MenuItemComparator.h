@@ -3,13 +3,14 @@
 
 #include "MenuItem.h"
 
-struct MenuItemNameComparator
+struct MenuItemNameAndParentIdComparator
 {
 public:
-	explicit MenuItemNameComparator(std::string name) : menuItemName(name) { }
-	inline bool operator()(const MenuItem& m) const { return m.menuName == menuItemName; }
+	explicit MenuItemNameAndParentIdComparator(std::string name, UINT parentId) { menuItemName = name; parentMenuItemId = parentId; }
+	inline bool operator()(const MenuItem& m) const { return m.GetName() == menuItemName && m.GetParentId() == parentMenuItemId; }
 private:
 	std::string menuItemName;
+	UINT parentMenuItemId;
 };
 
 struct MenuItemIdComparator

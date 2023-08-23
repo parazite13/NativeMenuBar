@@ -4,18 +4,19 @@ This plugin provides native menu bar functionalities for Windows builds using Un
 
 ![Screenshot1](Screen1.png)
 ![Screenshot1](Screen2.png)
+![Screenshot1](Screen3.png)
 
 # Feature
 
-| Features/Plateforms    | Windows   | Mac           | Linux         |
-|------------------------|-----------|---------------|---------------|
-| Nested MenuItems       | 1         | Not Supported | Not Supported |
-| Enabled/Disabled state | Supported | Not Supported | Not Supported |
-| Toggle state           | Supported | Not Supported | Not Supported |
-| Keyboard shortcut      | Supported | Not Supported | Not Supported |
+| Features/Plateforms    | Windows   | Mac           | Linux         | Editor        |
+|------------------------|-----------|---------------|---------------|---------------|
+| Nested MenuItems       | Unlimited | Not Supported | Not Supported | Not Supported |
+| Enabled/Disabled state | Supported | Not Supported | Not Supported | Not Supported |
+| Toggle state           | Supported | Not Supported | Not Supported | Not Supported |
+| Keyboard shortcut      | Supported | Not Supported | Not Supported | Not Supported |
 
 
-Currently only Windows plateform is supported
+Currently only Windows platform is supported
 
 # Usage
 

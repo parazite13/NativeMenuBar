@@ -17,7 +17,7 @@ namespace NativeMenuBar.Core
         internal static extern uint AddMenuRoot(string menu);
 
         [DllImport("NativeMenuBar.Windows.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern uint AddMenuItem(string menuRoot, string menuItem);
+        internal static extern uint AddMenuItem(uint menuRoot, string menuItem, bool hasSubItem);
 
         [DllImport("NativeMenuBar.Windows.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern bool IsMenuItemSelected(uint menuId);
@@ -44,7 +44,7 @@ namespace NativeMenuBar.Core
         // No implementation as fallback
         internal static void StartPlugin() { }
         internal static uint AddMenuRoot(string menu) { return default; }
-        internal static uint AddMenuItem(string menuRoot, string menuItem) { return default; }
+        internal static uint AddMenuItem(uint menuRoot, string menuItem, bool hasSubItem) { return default; }
         internal static bool IsMenuItemSelected(uint menuId) { return default; }
         internal static void SetMenuItemSelected(uint menuId, bool state) { }
         internal static bool IsMenuItemEnabled(uint menuId) { return default; }
@@ -62,7 +62,7 @@ namespace NativeMenuBar.Core
 
         public MenuRootItem[] MenuRoots => menuRootItems.ToArray();
 
-        public MenuItem[] MenuItems => menuRootItems.SelectMany(mri => mri.MenuItems).ToArray();
+        public MenuItem[] MenuItems => menuRootItems.SelectMany(mri => mri.AllChidren).ToArray();
 
         private static readonly List<uint> menuItemClickedIds = new List<uint>();
 
@@ -73,28 +73,40 @@ namespace NativeMenuBar.Core
             foreach (var menuRootItem in menuRootItems)
             {
                 menuRootItem.Id = AddMenuRoot(menuRootItem.Name);
-                foreach (var menuItem in menuRootItem.MenuItems)
-                {
-                    var menuItemName = menuItem.Name;
-                    if(menuItem.ShortcutCombination != MenuItem.CombinationKeys.None && !char.IsWhiteSpace(menuItem.Shortcut))
-                    {
-                        menuItemName += $"\t{menuItem.ShortcutCombination}+{menuItem.Shortcut.ToString().ToUpperInvariant()}";
-                    }
-                    else if(!char.IsWhiteSpace(menuItem.Shortcut))
-                    {
-                        menuItemName += $"\t{menuItem.Shortcut.ToString().ToUpperInvariant()}";
-                    }
-                    menuItem.Id = AddMenuItem(menuRootItem.Name, menuItemName);
-                }
+                SetupMenuItemRecursively(menuRootItem);
             }
 
             SetMenuItemCallback(OnMenuItemClicked);
             BuildMenu();
         }
 
+        private void SetupMenuItemRecursively(AbstractMenuItem parent)
+        {
+            foreach (var menuItem in parent.MenuItems)
+            {
+                var menuItemName = menuItem.Name;
+
+                // If it does not have subItems we can add suffix the shortcut
+                if(menuItem.MenuItems.Count == 0)
+                {
+                    if (menuItem.ShortcutCombination != MenuItem.CombinationKeys.None && !char.IsWhiteSpace(menuItem.Shortcut))
+                    {
+                        menuItemName += $"\t{menuItem.ShortcutCombination}+{menuItem.Shortcut.ToString().ToUpperInvariant()}";
+                    }
+                    else if (!char.IsWhiteSpace(menuItem.Shortcut))
+                    {
+                        menuItemName += $"\t{menuItem.Shortcut.ToString().ToUpperInvariant()}";
+                    }
+                }
+                menuItem.Id = AddMenuItem(parent.Id, menuItemName, menuItem.MenuItems.Count > 0);
+
+                SetupMenuItemRecursively(menuItem);
+            }
+        }
+
         private void Update()
         {
-            // Check the shortcuts to trigger events
+            // Check the shortcuts to trigger eventsa
             foreach (var menuItem in MenuItems)
             {
                 var keycodes = menuItem.ShortcutKeys;
