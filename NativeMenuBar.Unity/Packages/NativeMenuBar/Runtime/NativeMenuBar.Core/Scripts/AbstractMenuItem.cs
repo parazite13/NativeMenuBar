@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace NativeMenuBar.Core
@@ -17,6 +16,8 @@ namespace NativeMenuBar.Core
         [SerializeField]
         private List<MenuItem> menuItems = default;
         public List<MenuItem> MenuItems => menuItems;
+
+        public string FullPath { get; internal set; }
 
         public uint Id { get; internal set; }
 

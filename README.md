@@ -8,12 +8,12 @@ This plugin provides native menu bar functionalities for Windows builds using Un
 
 # Feature
 
-| Features/Plateforms    | Windows   | Mac           | Linux         | Editor        |
-|------------------------|-----------|---------------|---------------|---------------|
-| Nested MenuItems       | Unlimited | Not Supported | Not Supported | Not Supported |
-| Enabled/Disabled state | Supported | Not Supported | Not Supported | Not Supported |
-| Toggle state           | Supported | Not Supported | Not Supported | Not Supported |
-| Keyboard shortcut      | Supported | Not Supported | Not Supported | Not Supported |
+| Features/Plateforms    | Windows   | Mac           | Linux         | Editor              |
+|------------------------|-----------|---------------|---------------|---------------------|
+| Nested MenuItems       | Unlimited | Not Supported | Not Supported | Supported           |
+| Enabled/Disabled state | Supported | Not Supported | Not Supported | Supported           |
+| Toggle state           | Supported | Not Supported | Not Supported | Not Supported       |
+| Keyboard shortcut      | Supported | Not Supported | Not Supported | Partially Supported |
 
 
 Currently only Windows platform is supported

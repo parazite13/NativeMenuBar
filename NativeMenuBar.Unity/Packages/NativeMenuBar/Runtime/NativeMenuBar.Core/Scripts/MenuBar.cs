@@ -1,15 +1,29 @@
 using AOT;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using UnityEngine;
+
+[assembly: InternalsVisibleTo("NativeMenuBar.Editor")]
 
 namespace NativeMenuBar.Core
 {
     public class MenuBar : MonoBehaviour
     {
         #region DLL Import
-#if !UNITY_EDITOR && UNITY_STANDALONE_WIN
+#if UNITY_EDITOR
+        internal static void StartPlugin() => Editor.NativeMenuBarEditor.StartPlugin();
+        internal static uint AddMenuRoot(string menu) => Editor.NativeMenuBarEditor.AddMenuRoot(menu);
+        internal static uint AddMenuItem(uint menuRoot, string menuItem, bool hasSubItem) => Editor.NativeMenuBarEditor.AddMenuItem(menuRoot, menuItem, hasSubItem);
+        internal static bool IsMenuItemSelected(uint menuId) => Editor.NativeMenuBarEditor.IsMenuItemSelected(menuId);
+        internal static void SetMenuItemSelected(uint menuId, bool state) => Editor.NativeMenuBarEditor.SetMenuItemSelected(menuId, state);
+        internal static bool IsMenuItemEnabled(uint menuId) => Editor.NativeMenuBarEditor.IsMenuItemEnabled(menuId);
+        internal static void SetMenuItemEnabled(uint menuId, bool state) => Editor.NativeMenuBarEditor.SetMenuItemEnabled(menuId, state);
+        internal static void SetMenuItemCallback(MenuItemClicked menuItemClickedCallback) => Editor.NativeMenuBarEditor.SetMenuItemCallback(menuItemClickedCallback);
+        internal static void BuildMenu() => Editor.NativeMenuBarEditor.BuildMenu();
+
+#elif UNITY_STANDALONE_WIN
         [DllImport("NativeMenuBar.Windows.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void StartPlugin();
 
@@ -36,9 +50,9 @@ namespace NativeMenuBar.Core
 
         [DllImport("NativeMenuBar.Windows.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void BuildMenu();
-#elif !UNITY_EDITOR && UNITY_STANDALONE_OSX
+#elif UNITY_STANDALONE_OSX
 // TODO
-#elif !UNITY_EDITOR && UNITY_STANDALONE_LINUX
+#elif UNITY_STANDALONE_LINUX
 // TODO
 #else
         // No implementation as fallback
@@ -69,15 +83,19 @@ namespace NativeMenuBar.Core
         private void Awake()
         {
             StartPlugin();
+            SetupMenuItemRoot();
+            SetMenuItemCallback(OnMenuItemClicked);
+            BuildMenu();
+        }
 
+        internal void SetupMenuItemRoot()
+        {
             foreach (var menuRootItem in menuRootItems)
             {
                 menuRootItem.Id = AddMenuRoot(menuRootItem.Name);
+                menuRootItem.FullPath = menuRootItem.Name;
                 SetupMenuItemRecursively(menuRootItem);
             }
-
-            SetMenuItemCallback(OnMenuItemClicked);
-            BuildMenu();
         }
 
         private void SetupMenuItemRecursively(AbstractMenuItem parent)
@@ -85,9 +103,9 @@ namespace NativeMenuBar.Core
             foreach (var menuItem in parent.MenuItems)
             {
                 var menuItemName = menuItem.Name;
-
+                
                 // If it does not have subItems we can add suffix the shortcut
-                if(menuItem.MenuItems.Count == 0)
+                if (menuItem.MenuItems.Count == 0)
                 {
                     if (menuItem.ShortcutCombination != MenuItem.CombinationKeys.None && !char.IsWhiteSpace(menuItem.Shortcut))
                     {
@@ -99,6 +117,7 @@ namespace NativeMenuBar.Core
                     }
                 }
                 menuItem.Id = AddMenuItem(parent.Id, menuItemName, menuItem.MenuItems.Count > 0);
+                menuItem.FullPath = $"{parent.FullPath}/{menuItem.Name}";
 
                 SetupMenuItemRecursively(menuItem);
             }
