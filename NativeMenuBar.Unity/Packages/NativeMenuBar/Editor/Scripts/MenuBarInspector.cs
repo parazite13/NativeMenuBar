@@ -15,15 +15,19 @@ namespace NativeMenuBar.Editor
         private string codeGenFile = Path.Combine(Application.dataPath, "NativeMenuBar", "Editor", "NativeMenuBarEditor_AutoGen.cs");
 
         private string headerString = 
-$@"//
+$@"
+//
 // MACHINE-GENERATED CODE - DO NOT MODIFY BY HAND!
 //
 // NOTE: You definitely SHOULD commit this file to source control!!!
 //
 // To regenerate this file, select MenuBar component, look
 // in the custom Inspector window and press the Generate Editor menu.
+//
 
-using System.Linq;";
+using System.Linq;
+
+";
 
         public override void OnInspectorGUI()
         {
@@ -51,7 +55,7 @@ using System.Linq;";
                     stringBuilder.AppendLine($"    [UnityEditor.MenuItem(\"NativeMenuBar/{commandName}\", true)]");
                     stringBuilder.AppendLine($"    private static bool {SanitizeFolderName(menuItem.FullPath)}Validate()");
                     stringBuilder.AppendLine($"    {{");
-                    stringBuilder.AppendLine($"        return menubar.MenuItems.Single(item => item.FullPath == \"{menuItem.FullPath}\").IsInteractable;");
+                    stringBuilder.AppendLine($"        return UnityEngine.Application.isPlaying && menubar.MenuItems.Single(item => item.FullPath == \"{menuItem.FullPath}\").IsInteractable;");
                     stringBuilder.AppendLine($"    }}");
                 }
                 stringBuilder.AppendLine($"{Environment.NewLine}}}");
