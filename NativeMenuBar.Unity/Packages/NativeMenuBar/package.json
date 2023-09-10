@@ -1,6 +1,6 @@
 {
   "name": "com.parazite.nativemenubar",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "displayName": "Native Menu Bar",
   "description": "This package allows the usage of the native OS menu bar",
   "unity": "2019.4",

@@ -12,8 +12,6 @@ namespace NativeMenuBar.Editor
     [CustomEditor(typeof(MenuBar))]
     public class MenuBarInspector : UnityEditor.Editor
     {
-        private string codeGenFile = Path.Combine(Application.dataPath, "NativeMenuBar", "Editor", "NativeMenuBarEditor_AutoGen.cs");
-
         private string headerString = 
 $@"
 //
@@ -32,6 +30,8 @@ using System.Linq;
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
+
+            var codeGenFile = Path.Combine(Application.dataPath, "NativeMenuBar", "Editor", "NativeMenuBarEditor_AutoGen.cs");
 
             if(GUILayout.Button("Generate Editor menu"))
             {

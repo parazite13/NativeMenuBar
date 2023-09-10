@@ -16,12 +16,25 @@ This plugin provides native menu bar functionalities for Windows builds using Un
 | Keyboard shortcut      | Supported | Not Supported | Not Supported | Partially Supported |
 
 
-Currently only Windows platform is supported
+Currently only Windows platform is supported at runtime
 
-# Usage
+# Installation
+
+## From package manager through git
+
+- Add the following line in your manifest.json
+```
+"com.parazite.nativemenubar": "https://github.com/parazite13/NativeMenuBar.git?path=/NativeMenuBar.Unity/Packages/NativeMenuBar",
+```
+
+## As third party asset in your project
 
  - Download the latest package from the release
  - Add it into your Unity project either in the *Assets* folder or inside the *Packages* folder
+
+
+# Usage
+
  - Add the *MenuBar* component to any gameObject
  - Fill the component settings using the inspector
 

@@ -90,11 +90,14 @@ namespace NativeMenuBar.Core
 
         internal void SetupMenuItemRoot()
         {
-            foreach (var menuRootItem in menuRootItems)
+            if(menuRootItems != null)
             {
-                menuRootItem.Id = AddMenuRoot(menuRootItem.Name);
-                menuRootItem.FullPath = menuRootItem.Name;
-                SetupMenuItemRecursively(menuRootItem);
+                foreach (var menuRootItem in menuRootItems)
+                {
+                    menuRootItem.Id = AddMenuRoot(menuRootItem.Name);
+                    menuRootItem.FullPath = menuRootItem.Name;
+                    SetupMenuItemRecursively(menuRootItem);
+                }
             }
         }
 
